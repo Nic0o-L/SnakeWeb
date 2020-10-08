@@ -10,6 +10,7 @@ window.onload = function (){
     var widthInBlocks = canvasWidth/blockSize;
     var heightInBlocks = canvasHeight/blockSize;
     var score;
+    var timeOut;
 
     init();
 
@@ -43,17 +44,28 @@ window.onload = function (){
                 }while(applee.isOnSnake(snakee))
             }
             ctx.clearRect(0, 0, canvasWidth, canvasHeight)
+            drawScore();
             snakee.draw();
             applee.draw();
-            drawScore();
-            setTimeout(refreshCanvas, delay);
+            timeOut = setTimeout(refreshCanvas, delay);
         }
     }
 
     function gameOver(){
         ctx.save();
-        ctx.fillText("Game Over !", 5, 15);
-        ctx.fillText("Appuyer sur Espace pour rejouer.", 5, 30);
+        ctx.font = "bold 70px sans-serif";
+        ctx.fillStyle = "black";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 5;
+        var centreX = canvasWidth/2;
+        var centreY = canvasHeight/2;
+        ctx.strokeText("Game Over !", centreX, centreY - 180);
+        ctx.fillText("Game Over !", centreX, centreY - 180);
+        ctx.font = "bold 30px sans-serif";
+        ctx.strokeText("Appuyer sur Espace pour rejouer.", centreX, centreY - 120);
+        ctx.fillText("Appuyer sur Espace pour rejouer.", centreX, centreY - 120);
         ctx.restore();
     }
 
@@ -61,12 +73,19 @@ window.onload = function (){
         snakee = new Snake([[6,4], [5,4], [4,4]], "right");
         applee = new Apple([10,10]);
         score = 0;
+        clearTimeout(timeOut);
         refreshCanvas();
     }
 
     function drawScore(){
         ctx.save();
-        ctx.fillText("Score : " + score, 15, canvasHeight - 15);
+        ctx.font = "bold 150px sans-serif";
+        ctx.fillStyle = "gray";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        var centreX = canvasWidth/2;
+        var centreY = canvasHeight/2;
+        ctx.fillText("Score : " + score, centreX, centreY);
         ctx.restore();
     }
 
