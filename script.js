@@ -28,16 +28,30 @@ window.onload = function (){
         snakee.advance();
         if (snakee.checkCollidion()) {
             //game over
+            gameOver();
         }else{
             if (snakee.isEatingApple(applee)) {
-                //le serpent a mangé la pomme
-                applee.setNewPosition();
+                snakee.eatApple = true;
+                do{
+                    applee.setNewPosition();
+                }while(applee.isOnSnake(snakee))
             }
             ctx.clearRect(0, 0, canvasWidth, canvasHeight)
             snakee.draw();
             applee.draw();
             setTimeout(refreshCanvas, delay);
         }
+    }
+
+    function gameOver(){
+        ctx.save();
+        ctx.fillText("Game Over !", 5, 15);
+        ctx.fillText("Appuyer sur Espace pour rejouer.", 5, 30);
+        ctx.restore();
+    }
+
+    function restart(){
+        
     }
 
     function drawBlock(ctx, position){
@@ -49,6 +63,8 @@ window.onload = function (){
     function Snake (body, direction) {
         this.body = body;
         this.direction = direction;
+        this.eatApple = false;
+
         this.draw = function() {
             ctx.save();
             ctx.fillStyle = "#ff0000";
@@ -81,7 +97,11 @@ window.onload = function (){
                     throw("Invalid direction");
             }
             this.body.unshift(nextPosition);
-            this.body.pop();
+            if(!this.eatApple){
+                this.body.pop();
+            }else{
+                this.eatApple = false;
+            }
         };
 
         this.setDirection= function (newDirection){
@@ -195,6 +215,10 @@ window.onload = function (){
                 newDirection = "down";
                 break;
             
+            case 32:
+                restart();
+                return;
+
             default:
                 return;
         }
