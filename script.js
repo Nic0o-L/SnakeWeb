@@ -9,6 +9,7 @@ window.onload = function (){
     var applee;
     var widthInBlocks = canvasWidth/blockSize;
     var heightInBlocks = canvasHeight/blockSize;
+    var score;
 
     init();
 
@@ -16,11 +17,15 @@ window.onload = function (){
         var canvas = document.createElement('canvas');
         canvas.width = canvasWidth;
         canvas.height= canvasHeight;
-        canvas.style.border = "1px solid";
+        canvas.style.border = "30px solid gray";
+        canvas.style.margin = "50px auto";
+        canvas.style.display = "block";
+        canvas.style.backgroundColor = "#ddd" ;
         document.body.appendChild(canvas);
         ctx = canvas.getContext('2d');
         snakee = new Snake([[6,4], [5,4], [4,4]], "right");
         applee = new Apple([10,10]);
+        score = 0;
         refreshCanvas();
     }
 
@@ -31,6 +36,7 @@ window.onload = function (){
             gameOver();
         }else{
             if (snakee.isEatingApple(applee)) {
+                score++;
                 snakee.eatApple = true;
                 do{
                     applee.setNewPosition();
@@ -39,6 +45,7 @@ window.onload = function (){
             ctx.clearRect(0, 0, canvasWidth, canvasHeight)
             snakee.draw();
             applee.draw();
+            drawScore();
             setTimeout(refreshCanvas, delay);
         }
     }
@@ -51,7 +58,16 @@ window.onload = function (){
     }
 
     function restart(){
-        
+        snakee = new Snake([[6,4], [5,4], [4,4]], "right");
+        applee = new Apple([10,10]);
+        score = 0;
+        refreshCanvas();
+    }
+
+    function drawScore(){
+        ctx.save();
+        ctx.fillText("Score : " + score, 15, canvasHeight - 15);
+        ctx.restore();
     }
 
     function drawBlock(ctx, position){
